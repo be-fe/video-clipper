@@ -1,6 +1,6 @@
 {
   "name": "video-clipper",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "Clipping videos into small clips for team sharing (and also generate some audios & thumbnails)",
   "main": "index.js",
   "scripts": {
@@ -15,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/be-fe/video-clipper/issues"
   },
-  "homepage": "https://github.com/be-fe/video-clipper#readme"
+  "dependencies": {
+    "async": "^0.9.0",
+    "fluent-ffmpeg": "^2.0.0-rc3",
+    "lodash": "^3.10.1",
+    "md5": "^2.0.0",
+    "st": "^0.5.5"
+  },
+  "homepage": "https://github.com/be-fe/video-clipper#readme",
+  "bin": {
+    "clip-video": "./bin/clip-video.js"
+  }
 }
