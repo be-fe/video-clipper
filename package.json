@@ -1,0 +1,19 @@
+{
+  "name": "video-clipper",
+  "version": "0.1.0",
+  "description": "Clipping videos into small clips for team sharing (and also generate some audios & thumbnails)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/be-fe/video-clipper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/be-fe/video-clipper/issues"
+  },
+  "homepage": "https://github.com/be-fe/video-clipper#readme"
+}
