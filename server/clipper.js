@@ -64,11 +64,14 @@ var VideoThumbnailProcessor = jobRunner('Video Thumbnail Process', {
                 }
             });
 
-            vopts.bit_rate = vopts.bit_rate ?
-                vopts.bit_rate > 2500000 ? '2500k' :
-                    ('' + vopts.bit_rate).toLocaleLowerCase() == 'n/a' ? '2200k' :
-                        vopts.bit_rate > 1000000 ? (vopts.bit_rate / 1000 + 200) + 'k' : '1200k'
-                : '1200k';
+            //vopts.bit_rate = vopts.bit_rate ?
+            //    vopts.bit_rate > 2500000 ? '2500k' :
+            //        ('' + vopts.bit_rate).toLocaleLowerCase() == 'n/a' ? '2200k' :
+            //            vopts.bit_rate > 1000000 ? (vopts.bit_rate / 1000 + 200) + 'k' : '1200k'
+            //    : '1200k';
+
+            // 暂时设置比较低的码率, 看看效果
+            vopts.bit_rate = '1200k';
             aopts.bit_rate = '96k';
 
 
