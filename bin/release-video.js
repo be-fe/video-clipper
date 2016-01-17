@@ -106,7 +106,7 @@ var nextVideo = function() {
             utils.uploadDir(videoPath + 'thumb_small/', function () {
                 utils.uploadDir(videoPath + 'thumb_big/', function () {
                     // finish a video~ move it to removed if raw doesn't exists
-                    if (fs.exists(videoPath + '.clipped')) {
+                    if (fs.existsSync(videoPath + 'clipped')) {
                         fs.renameSync(videoPath, dirConfig.path.removed + video);
                     }
                     nextVideo();

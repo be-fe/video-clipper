@@ -46,9 +46,7 @@ var VideoThumbnailProcessor = jobRunner('Video Thumbnail Process', {
         var self = this;
         var output = self.context.output;
 
-        console.log('reach here');
         ffmpeg.ffprobe(videoFolderObj.path + output.raw + info.rawFile.file, function (err, metadata) {
-            console.log('reach here - inside ffmpeg');
             if (err) {
                 console.log(' ------- ERROR on -------- ', videoFolderObj.path, err);
                 callback();
@@ -99,7 +97,7 @@ var VideoThumbnailProcessor = jobRunner('Video Thumbnail Process', {
                 }
             }
 
-            console.log(info);
+            //console.log(info); @test
             self.writeInfo(videoFolderObj.path, info);
 
             callback(info);
@@ -162,7 +160,8 @@ var VideoClipper = jobRunner('Clip single video', {
                 });
                 //console.log(clipGenerator.running, clipGenerator._jobs.length, 'clip gen');
                 clipGenerator.jobsEnd(function() {
-                    fs.writeFileSync(videoPath + '/.clipped', '');
+                    console.log('finished video : ', videoPath);
+                    fs.writeFileSync(videoPath + '/clipped', '');
                     next();
                 });
             }
