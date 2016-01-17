@@ -24,14 +24,15 @@ var utils = {
 };
 
 if (!fs.existsSync('./config.js')) {
-    fs.writeFile('./config.js', 'module.exports =' +
+    fs.writeFileSync('./config.js',
         JSON.stringify(defaultConfig, null, '   ')
     );
 }
 
-var dirConfig = require('./config');
+var dirConfig = JSON.parse(fs.readFileSync('./config.js'));
 if (dirConfig.serverUrl == defaultConfig.serverUrl) {
-    console.log('Please set up the correct values for the ./config.js');
+    console.log('Please set up the correct values for the ./config.js, as now it\'s still' +
+        ' using the default values.' );
     process.exit(1);
 }
 
@@ -40,7 +41,7 @@ request
     .post(utils.url('token'))
     .on('response', function(res) {
         console.log(res);
-    })
+    });
 
 
 
