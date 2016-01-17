@@ -35,10 +35,34 @@ var utils = {
     url: function(type) {
         return this.config.serverUrl + this.ajax[type];
     },
+    uploadDir: function(dirpath, callback) {
+        var files = fs.readdirSync(dirpath);
+        var self = this;
+
+        if (files.length) {
+            var uploadNext = function() {
+                //console.log('files - ', files);
+                var file = files.pop();
+                if (!file) {
+                    callback();
+                    return;
+                }
+                self.upload(dirpath + file, uploadNext);
+            };
+            uploadNext();
+        } else {
+            callback();
+        }
+    }
+    ,
     upload: function(filepath, callback) {
+        callback = callback || _.noop;
         var relativePath = npath.relative(dirConfig.path.local, filepath);
+        console.log('relative path: ', relativePath);
         request
-            .post(utils.url('check'), function(err, res) {
+            .post(utils.url('check'), {
+                form: {filePath: relativePath}
+            }, function(err, res) {
                 if (res.body == 'no') {
                     request
                         .post(utils.url('token'), function (err, res) {
@@ -50,12 +74,13 @@ var utils = {
                                     tokenHash: md5(res.body + dirConfig.tokenPass)
                                 }
                             }, function (err, res) {
-                                callback('sent');
-                                console.log(res.body);
+                                console.log(filepath + ' sent.');
+                                callback && callback();
                             });
                         });
                 } else {
-                    callback('exists');
+                    console.log(filepath + ' exists.');
+                    callback && callback();
                 }
             });
     }
@@ -69,7 +94,25 @@ if (dirConfig.serverUrl == defaultConfig.serverUrl) {
 utils.init(dirConfig);
 
 // @test token url
-utils.upload(npath.resolve('./videos-local/screencast_2016_01_16_19_03_25__b681fabda351fcb8/video/00000_l.mp4'));
+var videos = fs.readdirSync(dirConfig.path.local);
 
+var nextVideo = function() {
+    var video = videos.pop();
+    if (!video) return;
 
-
+    var videoPath = dirConfig.path.local + video + '/';
+    if (fs.existsSync(videoPath + 'video/')) {
+        utils.uploadDir(videoPath + 'video/', function () {
+            utils.uploadDir(videoPath + 'thumb_small/', function () {
+                utils.uploadDir(videoPath + 'thumb_big/', function () {
+                    // finish a video~ move it to removed if raw doesn't exists
+                    if (fs.exists(videoPath + '.clipped')) {
+                        fs.renameSync(videoPath, dirConfig.path.removed + video);
+                    }
+                    nextVideo();
+                });
+            });
+        });
+    }
+};
+nextVideo();

@@ -161,7 +161,10 @@ var VideoClipper = jobRunner('Clip single video', {
                     clipGenerator.generateClip(videoPath, info, select);
                 });
                 //console.log(clipGenerator.running, clipGenerator._jobs.length, 'clip gen');
-                clipGenerator.jobsEnd(next);
+                clipGenerator.jobsEnd(function() {
+                    fs.writeFileSync(videoPath + '/.clipped', '');
+                    next();
+                });
             }
         });
     }
@@ -386,7 +389,7 @@ var Clipper = jobRunner('Clipper', {
 
                 videoClipper.jobsEnd(next);
             }
-        })
+        });
 
         return self;
     },
