@@ -297,7 +297,7 @@ var Clipper = jobRunner('Clipper', {
                     if (context.rgx.video.exec(fileObj.file)) {
                         console.log('Video found - ', fileObj.path);
 
-                        var videoFolder = fileObj.base.replace(/\W/g, '_') + '__' + md5(fileObj.file).substr(0, 16);
+                        var videoFolder = fileObj.base.replace(/\W/g, '_') + '__' + md5(Math.random()).substr(0, 16);
 
                         var videoPath = config.pathLocalVideo + videoFolder + '/';
                         self.mkdir(videoPath);
