@@ -242,7 +242,7 @@ var ClipGenerator = jobRunner('Clip generator', {
                     if (fileType == 'video') {
                         cmd.videoCodec('libx264')
                             .videoBitrate(videoBitRate)
-                            //.outputOption('-bf', '0');
+                            .outputOption('-bf', '0');
                     } else {
                         cmd.noVideo();
                     }
