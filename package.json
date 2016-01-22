@@ -1,6 +1,6 @@
 {
   "name": "video-clipper",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "description": "Clipping videos into small clips for team sharing (and also generate some audios & thumbnails)",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/be-fe/video-clipper#readme",
   "bin": {
-    "clip-video": "./bin/clip-video.js"
+    "clip-video": "./bin/clip-video.js",
+    "release-video": "./bin/release-video.js"
   }
 }
