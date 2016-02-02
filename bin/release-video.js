@@ -5,14 +5,11 @@ var _ = require('lodash');
 var npath = require('path');
 var md5 = require('md5');
 var request = require('request');
+var clipperFactory = require(__dirname + '/../main/clipper');
 
 var defaultConfig = {
     serverUrl: 'http://example.com:1234/context/',
-    tokenPass: 'the token is being used to send back the token for sending files',
-    path: {
-        local: npath.resolve('./videos-local/') + '/',
-        removed: npath.resolve('./videos-removed/') + '/'
-    }
+    tokenPass: 'the token is being used to send back the token for sending files'
 };
 
 if (!fs.existsSync('./config.json')) {
@@ -21,10 +18,19 @@ if (!fs.existsSync('./config.json')) {
     );
 }
 
-var dirConfig = _.extend({}, defaultConfig, JSON.parse(fs.readFileSync('./config.json')));
+var dirConfig = _.extend(
+    {},
+    defaultConfig,
+    JSON.parse(fs.readFileSync('./config.json')),
+    {
+        path: {
+            local: npath.resolve('./videos-local/') + '/',
+            removed: npath.resolve('./videos-removed/') + '/'
+        }
+    });
 
 var utils = {
-    init: function(config) {
+    init: function (config) {
         this.config = config;
     },
     ajax: {
@@ -32,15 +38,15 @@ var utils = {
         token: 'ajax/request-token',
         check: 'ajax/check-file'
     },
-    url: function(type) {
+    url: function (type) {
         return this.config.serverUrl + this.ajax[type];
     },
-    uploadDir: function(dirpath, callback) {
+    uploadDir: function (dirpath, callback) {
         var files = fs.readdirSync(dirpath);
         var self = this;
 
         if (files.length) {
-            var uploadNext = function() {
+            var uploadNext = function () {
                 //console.log('files - ', files);
                 var file = files.pop();
                 if (!file) {
@@ -55,14 +61,14 @@ var utils = {
         }
     }
     ,
-    upload: function(filepath, callback) {
+    upload: function (filepath, callback) {
         callback = callback || _.noop;
         var relativePath = npath.relative(dirConfig.path.local, filepath);
         console.log('relative path: ', relativePath);
         request
             .post(utils.url('check'), {
                 form: {filePath: relativePath}
-            }, function(err, res) {
+            }, function (err, res) {
                 if (res.body == 'no') {
                     request
                         .post(utils.url('token'), function (err, res) {
@@ -88,7 +94,7 @@ var utils = {
 
 if (dirConfig.serverUrl == defaultConfig.serverUrl) {
     console.log('Please set up the correct values for the ./config.js, as now it\'s still' +
-        ' using the default values.' );
+    ' using the default values.');
     process.exit(1);
 }
 utils.init(dirConfig);
@@ -96,7 +102,7 @@ utils.init(dirConfig);
 // @test token url
 var videos = fs.readdirSync(dirConfig.path.local);
 
-var nextVideo = function() {
+var nextVideo = function () {
     var video = videos.pop();
     if (!video) return;
 
@@ -108,6 +114,8 @@ var nextVideo = function() {
                     // finish a video~ move it to removed if raw doesn't exists
                     if (fs.existsSync(videoPath + 'clipped')) {
                         fs.renameSync(videoPath, dirConfig.path.removed + video);
+
+                        console.log(' >>>>>>>>>>> video uploaded as : http://' + dirConfig.serverUrl + 'index#video=' + video);
                     }
                     nextVideo();
                 });
@@ -115,4 +123,8 @@ var nextVideo = function() {
         });
     }
 };
-nextVideo();
+
+var clipper = clipperFactory.getClipper();
+clipper.clipAllVideosUnderVideoLocalFolder(function () {
+    nextVideo();
+});

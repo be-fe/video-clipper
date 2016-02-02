@@ -392,13 +392,14 @@ var Clipper = jobRunner('Clipper', {
 
         return self;
     },
-    clipAllVideosUnderVideoLocalFolder: function() {
+    clipAllVideosUnderVideoLocalFolder: function(clipEnded) {
         this.jobEnsureFolders()
             .jobMkdirVideos()
             .jobProcessVideos()
             .jobClipVideos()
             .jobsEnd(function() {
                 console.log(' #=============== END of video clipping ===================# ');
+                clipEnded && clipEnded();
             });
     }
 });

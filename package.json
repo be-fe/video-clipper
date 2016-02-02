@@ -1,6 +1,6 @@
 {
   "name": "video-clipper",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "description": "Clipping videos into small clips for team sharing (and also generate some audios & thumbnails)",
   "main": "index.js",
   "scripts": {
