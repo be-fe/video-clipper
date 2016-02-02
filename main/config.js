@@ -12,7 +12,7 @@ context.config = {
 };
 
 context.rgx = {
-    video: /\.(mp4|wmv|avi|rmvb|mkv|rm|rmvb)$/,
+    video: /\.(mp4|wmv|avi|rmvb|mkv|rm|rmvb|mov)$/,
     txt: /\.txt$/,
     js: /\.js$/
 };

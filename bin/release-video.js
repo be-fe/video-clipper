@@ -18,10 +18,15 @@ if (!fs.existsSync('./config.json')) {
     );
 }
 
+var localConfig = JSON.parse(fs.readFileSync('./config.json'));
+if (!/\/$/.exec(localConfig.serverUrl)) {
+    localConfig.serverUrl += '/';
+}
+
 var dirConfig = _.extend(
     {},
     defaultConfig,
-    JSON.parse(fs.readFileSync('./config.json')),
+    localConfig,
     {
         path: {
             local: npath.resolve('./videos-local/') + '/',
@@ -99,9 +104,7 @@ if (dirConfig.serverUrl == defaultConfig.serverUrl) {
 }
 utils.init(dirConfig);
 
-// @test token url
-var videos = fs.readdirSync(dirConfig.path.local);
-
+var videos;
 var nextVideo = function () {
     var video = videos.pop();
     if (!video) return;
@@ -115,7 +118,7 @@ var nextVideo = function () {
                     if (fs.existsSync(videoPath + 'clipped')) {
                         fs.renameSync(videoPath, dirConfig.path.removed + video);
 
-                        console.log(' >>>>>>>>>>> video uploaded as : http://' + dirConfig.serverUrl + 'index#video=' + video);
+                        console.log(' >>>>>>>>>>> video uploaded as : ' + dirConfig.serverUrl + 'index#video=' + video);
                     }
                     nextVideo();
                 });
@@ -126,5 +129,8 @@ var nextVideo = function () {
 
 var clipper = clipperFactory.getClipper();
 clipper.clipAllVideosUnderVideoLocalFolder(function () {
+// @test token url
+    videos = fs.readdirSync(dirConfig.path.local);
+
     nextVideo();
 });
