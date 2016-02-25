@@ -62,6 +62,10 @@ var VideoThumbnailProcessor = jobRunner('Video Thumbnail Process', {
                 }
             });
 
+            // make sure a missing stream won't break the whole process
+            vopts = vopts || {};
+            aopts = aopts || {};
+
             //vopts.bit_rate = vopts.bit_rate ?
             //    vopts.bit_rate > 2500000 ? '2500k' :
             //        ('' + vopts.bit_rate).toLocaleLowerCase() == 'n/a' ? '2200k' :
